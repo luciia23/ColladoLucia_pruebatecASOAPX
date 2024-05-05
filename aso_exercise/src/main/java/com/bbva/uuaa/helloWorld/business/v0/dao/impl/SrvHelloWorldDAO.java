@@ -3,6 +3,8 @@ package com.bbva.uuaa.helloWorld.business.v0.dao.impl;
 import com.bbva.uuaa.helloWorld.business.v0.dao.ISrvHelloWorldDAO;
 import com.bbva.uuaa.helloWorld.business.v0.dto.*;
 import org.springframework.stereotype.Component;
+
+import java.util.Random;
 import java.util.UUID;
 
 @Component(value="srvHelloWorldDAO")
@@ -25,7 +27,7 @@ public class SrvHelloWorldDAO implements ISrvHelloWorldDAO {
         bDetailsOut.setLimitAmount(bDetails.getLimitAmount());
         bDetailsOut.setMinimumAmount(createMinimumAmount(bDetails.getLimitAmount()));
         bDetailsOut.setMaximumAmount(createMaximumAmount(bDetails.getLimitAmount()));
-        bDetailsOut.setProduct(bDetails.getProduct());
+        bDetailsOut.setProduct(createBProduct(bDto));
         return bDetailsOut;
     }
 
@@ -50,14 +52,16 @@ public class SrvHelloWorldDAO implements ISrvHelloWorldDAO {
 
     private BProduct createBProduct(BDto bDto){
         BProduct bProduct = new BProduct();
+        BSubProduct bSubProduct = new BSubProduct();
         bProduct.setId(bDto.getDetails().getProduct().getId());
-        bProduct.setSubproduct(bDto.getDetails().getProduct().getSubproduct());
+        bSubProduct.setId(bDto.getDetails().getProduct().getSubproduct().getId());
+        bProduct.setSubproduct(bSubProduct);
         return bProduct;
     }
 
     private String numAlea(){
-        String uuid = UUID.randomUUID().toString().toUpperCase().replace("-", "");
-        return uuid.substring(0, 10);
+        Random random = new Random();
+        return String.valueOf(Math.abs(random.nextLong() % 10000000000L));
     }
 
 }

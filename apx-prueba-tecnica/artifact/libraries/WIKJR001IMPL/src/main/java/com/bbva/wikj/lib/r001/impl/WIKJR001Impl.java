@@ -10,8 +10,11 @@ import java.util.Map;
 
 public class WIKJR001Impl extends WIKJR001Abstract {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(WIKJR001Impl.class);
-
+	/*
+	* Ejecuta la inserción de un cliente en la base de datos
+	* @param customerIn objeto con los datos del cliente a insertar
+	* @return resultado de la operación de la inserción (1 si es éxito, 0 si hay error)
+	* */
 	@Override
 	public int executeInsert(CustomerIn customerIn) {
 		Map<String, Object> args = new HashMap<>();
@@ -20,20 +23,17 @@ public class WIKJR001Impl extends WIKJR001Abstract {
 		args.put("full_name", customerIn.getFullName());
 		args.put("phone", customerIn.getPhone());
 		args.put("address", customerIn.getAddress());
-		return this.jdbcUtils.update("query", args);
+		return this.jdbcUtils.update("query.insert", args);
 	}
 
-	@Override
-	public boolean executeSelectNuip(String nuip) {
-		Map<String, Object> result = this.jdbcUtils.queryForMap("query.selectNuip", nuip);
-		if (String.valueOf(result.get("nuip")) == null)
-			return (false);
-		return true;
-	}
-
+	/*
+	* Ejecuta la selección de un cliente en la base de datos
+	* @param id ID del cliente a seleccionar
+	* @return objeto CustomerOut con los datos del cliente seleccionado
+	* */
 	@Override
 	public CustomerOut executeSelect(String id) {
-		Map<String, Object> result = this.jdbcUtils.queryForMap("query.selectNuip", id);
+		Map<String, Object> result = this.jdbcUtils.queryForMap("query.select", id);
 		CustomerOut customerOut = new CustomerOut();
 		customerOut.setId(String.valueOf(result.get("id")));
 		customerOut.setNuip(String.valueOf(result.get("nuip")));
